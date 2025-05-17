@@ -7597,9 +7597,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/aimal/Desktop/Expense Tracker/Expense Tracker.csproj",
-      "projectName": "Expense Tracker",
-      "projectPath": "/home/aimal/Desktop/Expense Tracker/Expense Tracker.csproj",
+      "projectUniqueName": "/home/aimal/Desktop/Expense Tracker/ExpenseTracker.csproj",
+      "projectName": "ExpenseTracker",
+      "projectPath": "/home/aimal/Desktop/Expense Tracker/ExpenseTracker.csproj",
       "packagesPath": "/home/aimal/.nuget/packages/",
       "outputPath": "/home/aimal/Desktop/Expense Tracker/obj/",
       "projectStyle": "PackageReference",

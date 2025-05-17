@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NoAu8MgD2AaVq+eZYDqfZGOKABaZXp0wmx9Tj/UX0uRM9bmk1weEzxlqRPtTyusbCpmA27B4XW0boMl8IguaBA==",
+  "dgSpecHash": "g7SS/hn+Ui0gckwYrit4F46EMWqH+J5Pwi3TPnwkB8VnmhS9WupsbM0wHuQ2pjMssW6p7+2gt9PoSvhYfN0//g==",
   "success": true,
-  "projectFilePath": "/home/aimal/Desktop/Expense Tracker/Expense Tracker.csproj",
+  "projectFilePath": "/home/aimal/Desktop/Expense Tracker/ExpenseTracker.csproj",
   "expectedPackageFiles": [
     "/home/aimal/.nuget/packages/humanizer/2.14.1/humanizer.2.14.1.nupkg.sha512",
     "/home/aimal/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
