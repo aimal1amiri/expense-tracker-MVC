@@ -6,26 +6,39 @@ name: 'Build and deploy ASP.Net Core app to Azure Web App: aimal-expensetracker'
 on:
   push:
     branches:
-    - master
+      - master
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.x'
 
+    - name: Install EF Core CLI tools
+      run: dotnet tool install --global dotnet-ef
+
+    - name: Add EF tools to PATH
+      run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+    - name: Restore dependencies
+      run: dotnet restore
+
     - name: Build with dotnet
       run: dotnet build --configuration Release
-    
+
+    - name: Run EF Core Migrations
+      run: dotnet ef database update
+      working-directory: ./  # Set this if your .csproj is in a subfolder
+
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp 
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -33,4 +46,5 @@ jobs:
         app-name: 'aimal-expensetracker'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_f2addff16a044d0880d62074f66df33d }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        package: ${{env.DOTNET_ROOT}}/myapp
+
