@@ -1,0 +1,358 @@
+@using Microsoft.AspNetCore.Identity
+@using Expense_Tracker.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Expense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        :root {
+            --bg-main: #121212;
+            --accent-primary: #4e9eff;
+            --accent-secondary: #9e4eff;
+            --text-main: #e0e0e0;
+            --text-muted: #9ca3af;
+            --cta-hover: #2563eb;
+        }
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+        }
+        .split-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+        .visual-panel {
+            flex: 1 1 0;
+            background: linear-gradient(135deg, #4e9eff 0%, #9e4eff 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-top-left-radius: 2rem;
+            border-bottom-left-radius: 2rem;
+            padding: 2.5rem 2.5rem 2.5rem 3.5rem;
+            min-width: 340px;
+            position: relative;
+        }
+        .quote-top {
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .quote-top:after {
+            content: '';
+            display: inline-block;
+            height: 2px;
+            width: 60px;
+            background: #fff;
+            margin-left: 1rem;
+            opacity: 0.5;
+        }
+        .visual-title {
+            font-size: 2.3rem;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1.2rem;
+            font-family: 'Inter', serif;
+        }
+        .visual-subtext {
+            font-size: 1.05rem;
+            color: #e0e0e0;
+            opacity: 0.9;
+            max-width: 320px;
+        }
+        .form-panel {
+            background: #fff;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 2rem;
+        }
+        .form-box {
+            width: 100%;
+            max-width: 370px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .logo-icon {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.7rem;
+        }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bg-main);
+        }
+        .form-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bg-main);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .form-subtext {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .form-label {
+            font-weight: 500;
+            color: var(--bg-main);
+        }
+        .form-control {
+            border-radius: 0.6rem;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(78, 158, 255, 0.15);
+        }
+        .form-check-label {
+            color: var(--text-muted);
+            font-size: 0.97rem;
+        }
+        .forgot-link {
+            font-size: 0.97rem;
+            color: var(--accent-primary);
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        .btn-signin {
+            width: 100%;
+            background: #121212;
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.6rem;
+            padding: 0.9rem 0;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 2px 8px 0 rgba(18, 18, 18, 0.10);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn-signin:hover {
+            background: #222;
+            box-shadow: 0 4px 16px 0 rgba(18, 18, 18, 0.18);
+        }
+        .divider {
+            text-align: center;
+            color: var(--text-muted);
+            margin: 1.2rem 0 1.2rem 0;
+            font-size: 0.97rem;
+            position: relative;
+        }
+        .divider:before, .divider:after {
+            content: '';
+            display: inline-block;
+            height: 1px;
+            width: 30%;
+            background: #e5e7eb;
+            vertical-align: middle;
+            margin: 0 0.5rem;
+        }
+        .btn-google {
+            width: 100%;
+            background: #fff;
+            color: #222;
+            font-weight: 600;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.6rem;
+            padding: 0.8rem 0;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn-google:hover {
+            background: #f3f4f6;
+            box-shadow: 0 2px 8px 0 rgba(34, 197, 94, 0.10);
+        }
+        .login-link {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .login-link a {
+            color: var(--bg-main);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        @@media (max-width: 991px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .visual-panel {
+                border-radius: 0 0 2rem 2rem;
+                min-height: 260px;
+                padding: 2rem 1rem;
+                align-items: center;
+            }
+        }
+        @@media (max-width: 600px) {
+            body {
+                background: var(--bg-main);
+            }
+            .split-container {
+                flex-direction: column;
+                min-height: unset;
+                background: transparent;
+            }
+            .form-panel {
+                order: 1;
+            }
+            .visual-panel {
+                order: 2;
+            }
+            .visual-panel {
+                border-radius: 1.2rem 1.2rem 0 0;
+                min-width: unset;
+                padding: 2rem 1rem 1.2rem 1rem;
+                align-items: center;
+                text-align: center;
+            }
+            .form-panel {
+                border-radius: 0 0 1.2rem 1.2rem;
+                padding: 2rem 1rem 1.5rem 1rem;
+                min-width: unset;
+                box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+            }
+            .form-box {
+                max-width: 100%;
+            }
+            .logo {
+                margin-bottom: 1.2rem;
+            }
+            .form-heading {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+            .form-subtext {
+                font-size: 1rem;
+                margin-bottom: 1.2rem;
+            }
+            .btn-signin, .btn-google {
+                font-size: 1rem;
+                padding: 0.9rem 0;
+                border-radius: 0.7rem;
+            }
+            .divider {
+                margin: 1.2rem 0 1.2rem 0;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Side (Visual Panel) -->
+        <div class="visual-panel">
+            <div>
+                <div class="quote-top">A WISE QUOTE</div>
+                <div class="visual-title">Get<br>Everything<br>You Want</div>
+                <div class="visual-subtext">You can get everything you want if you work hard, trust the process, and stick to the plan.</div>
+            </div>
+        </div>
+        <!-- Right Side (Form Panel) -->
+        <div class="form-panel">
+            <div class="form-box">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill='#4e9eff'/></svg>
+                    </div>
+                    <span class="logo-text">Expense</span>
+                </div>
+                <div class="form-heading">Welcome Back</div>
+                <div class="form-subtext">Enter your email and password to access your account.</div>
+                <form asp-action="Login" asp-controller="Home" method="post">
+                    @Html.AntiForgeryToken()
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" />
+                        <span class="input-group-text" style="background:transparent; border-left:0; cursor:pointer;" onclick="togglePassword()">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="#9ca3af" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#9ca3af" stroke-width="2"/></svg>
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="true" id="rememberMe" name="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-link">Forgot Password</a>
+                    </div>
+                    <button type="submit" class="btn btn-signin mt-2">Sign In</button>
+                </form>
+                <div class="divider">or</div>
+                <button class="btn btn-google">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style="width:1.3rem; height:1.3rem;"> Sign In with Google
+                </button>
+                <div class="login-link">
+                    Don't have an account? <a href="/signup">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function togglePassword() {
+            var pwd = document.getElementById('password');
+            var icon = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.innerHTML = '<circle cx="12" cy="12" r="10" fill="#fff"/><path stroke="#9ca3af" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#9ca3af" stroke-width="2"/><line x1="4" y1="4" x2="20" y2="20" stroke="#9ca3af" stroke-width="2"/>';
+            } else {
+                pwd.type = 'password';
+                icon.innerHTML = '<path stroke="#9ca3af" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#9ca3af" stroke-width="2"/>';
+            }
+        }
+    </script>
+</body>
+</html> 

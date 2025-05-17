@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fortawesome/fontawesome-free@6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100%;
+            overflow-y: auto;
+        }
+        body {
+            background: #151a21;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 18%;
+            z-index: 1030;
+            background: #181d25;
+            border-right: 1px solid #23272f;
+        }
+        .main-content-fixed {
+            margin-left: 18%;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        @@media (max-width: 991px) {
+            #sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+            }
+            .main-content-fixed {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    @using Microsoft.AspNetCore.Identity
+    @using Expense_Tracker.Models
+    @inject SignInManager<ApplicationUser> SignInManager
+    @inject UserManager<ApplicationUser> UserManager
+    @{
+        var user = await UserManager.GetUserAsync(User);
+        var fullName = user != null ? $"{user.Name} {user.Surname}" : "User";
+    }
+    <nav class="navbar sticky-top px-0 w-100" style=" width: 100vw; min-width: 100vw;">
+        <div class="d-flex align-items-center w-100 justify-content-between" style="min-height:vh;">
+            <button class="sidebar-toggle-btn d-md-none" onclick="toggleMobileDrawer()">
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="flex-grow-1"></div>
+            <div class="align-items-center">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <form asp-controller="Home" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger">Logout</button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/login" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                }
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex">
+        <partial name="_SideBar" />
+        <div class="main-content-fixed flex-grow-1">
+            <div id="sidebar-overlay-bg" onclick="toggleSidebar()" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999;"></div>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="@(ViewData["isDashboard"] == null?"col-md-10":"col-md-12")">
+                        <main role="main" class="pb-3">
+                            @if (ViewData["isDashboard"] == null)
+                            {
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="d-flex flex-column mb-5">
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1">
+                                                    <h3 class="fw-bold">@ViewData["PageTitle"]</h3>
+                                                </div>
+                                                <div>
+                                                    @if (ViewData["PageActionText"] != null)
+                                                    {
+                                                        <a class="btn btn-success" href="@ViewData["PageActionUrl"]">
+                                                            @ViewData["PageActionText"]
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <nav aria-label="breadcrumb">
+                                                <ol class="breadcrumb">
+                                                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                                    <li class="breadcrumb-item active" aria-current="page">@ViewData["PageTitle"]</li>
+                                                </ol>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @RenderBody()
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Drawer (hidden on desktop) -->
+    <div id="mobileDrawer" class="mobile-drawer">
+        <button class="sidebar-close-btn" onclick="toggleMobileDrawer()" style="position:absolute;top:1em;right:1em;z-index:4100;background:#232b36;border:none;color:#fff;font-size:2em;border-radius:0.5em;padding:0.2em 0.5em;">
+            <i class="fa fa-times"></i>
+        </button>
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <img src="~/logo.png" alt="Logo" width="40" height="40" class="me-2">
+            <span class="fs-4">Wallet App</span>
+        </a>
+        <hr>
+        <div class="profile-wrapper d-flex align-items-center mb-3">
+            <img class="profile-pic rounded-circle me-2" src="~/profile.jpg" width="40" height="40" />
+            <div class="d-flex flex-column">
+                <strong>@fullName</strong>
+                <span class="text-muted" style="font-size: 0.9em;">Wallet App</span>
+            </div>
+        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/" class="nav-link text-white">
+                    <i class="fa-solid fa-box me-2"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/Category" class="nav-link text-white">
+                    <i class="fa-solid fa-folder-closed me-2"></i> Categories
+                </a>
+            </li>
+            <li>
+                <a href="/Transaction" class="nav-link text-white">
+                    <i class="fa-solid fa-arrow-right-arrow-left me-2"></i> Transactions
+                </a>
+            </li>
+            <li><hr class="dropdown-divider bg-secondary"></li>
+            <li>
+                <a asp-controller="Reports" asp-action="Index" class="nav-link text-white">
+                    <i class="fa-solid fa-chart-simple me-2"></i> Reports
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Settings" asp-action="Index" class="nav-link text-white">
+                    <i class="fa-solid fa-gear me-2"></i> Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay-bg');
+        if (window.innerWidth > 768) return;
+        if (sidebar.classList.contains('sidebar-overlay')) {
+            sidebar.classList.remove('sidebar-overlay');
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        } else {
+            sidebar.classList.add('sidebar-overlay');
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    window.addEventListener('resize', function() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay-bg');
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('sidebar-overlay');
+            sidebar.style.display = '';
+            sidebar.style.position = '';
+            sidebar.style.top = '';
+            sidebar.style.left = '';
+            sidebar.style.height = '';
+            sidebar.style.width = '';
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        } else {
+            sidebar.classList.remove('sidebar-overlay');
+            sidebar.style.display = '';
+            sidebar.style.position = '';
+            sidebar.style.top = '';
+            sidebar.style.left = '';
+            sidebar.style.height = '';
+            sidebar.style.width = '';
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    function toggleMobileDrawer() {
+        var drawer = document.getElementById('mobileDrawer');
+        var overlay = document.getElementById('mobileDrawerOverlay');
+        if (drawer.classList.contains('active')) {
+            drawer.classList.remove('active');
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        } else {
+            drawer.classList.add('active');
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Hide drawer on desktop resize
+    window.addEventListener('resize', function() {
+        var drawer = document.getElementById('mobileDrawer');
+        var overlay = document.getElementById('mobileDrawerOverlay');
+        if (window.innerWidth > 768) {
+            drawer.classList.remove('active');
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

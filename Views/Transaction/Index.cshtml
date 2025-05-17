@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Expense_Tracker.Models.Transaction>
+
+@{
+    ViewData["PageTitle"] = "Transactions";
+    ViewData["PageActionText"] = "+ New Transaction";
+    ViewData["PageActionUrl"] = "/Transaction/AddOrEdit";
+    var page = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
+    var pageSize = 10;
+    var totalItems = Model.Count();
+    var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+    var pagedTransactions = Model.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow bg-dark text-white">
+            <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
+                <span class="fw-bold">Transactions</span>
+                <a class="btn btn-success btn-sm" href="@ViewData["PageActionUrl"]">+ New Transaction</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Note</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in pagedTransactions)
+                            {
+                                var parts = (item.CategoryTitleWithIcon as string)?.Split(' ') ?? new string[0];
+                                var iconClass = string.Join(' ', parts.TakeWhile(p => p.StartsWith("fa-")));
+                                var name = string.Join(' ', parts.SkipWhile(p => p.StartsWith("fa-")));
+                                <tr>
+                                    <td><span style="font-size:1.5em;"><i class="@iconClass"></i></span> <span class="ms-1" style="font-size:1em;">@name</span></td>
+                                    <td>@item.Note</td>
+                                    <td>@item.Date.ToString("MMM-dd-yy")</td>
+                                    <td>
+                                        @if ((item.Category != null && item.Category.Type == "Income") || (item.FormattedAmount != null && item.FormattedAmount.StartsWith("+")))
+                                        {
+                                            <span class="text-success">@item.FormattedAmount</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">@item.FormattedAmount</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-primary me-1" href="/Transaction/AddOrEdit/@item.TransactionId" title="Edit" style="font-size:1em;"><i class="fa fa-pen"></i></a>
+                                        <form action="/Transaction/Delete/@item.TransactionId" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this record?')" title="Delete" style="font-size:1em;"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-dark d-flex justify-content-between align-items-center">
+                <div>
+                    Showing @((page - 1) * pageSize + 1) - @(Math.Min(page * pageSize, totalItems)) of @totalItems items
+                </div>
+                <nav>
+                    <ul class="pagination mb-0">
+                        <li class="page-item @(page == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>
+                        <li class="page-item @(page == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(page - 1)">&lsaquo;</a>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == page ? "active" : "")">
+                                <a class="page-link" href="?page=@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(page == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(page + 1)">&rsaquo;</a>
+                        </li>
+                        <li class="page-item @(page == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@totalPages">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+<script id="actionColumnTemplate" type="text/x-template">
+    <div class="d-flex flex-row justify-content-start">
+        <a class="btn btn-sm no-a-decoration" href="/Transaction/AddOrEdit/${TransactionId}">
+            <i class="fa-solid fa-pen fa-lg"></i>
+        </a>
+        <form action="/Transaction/Delete/${TransactionId}" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-sm btn-link no-a-decoration"
+            onclick="return confirm(&quot;Are sure to delete this record?&quot;)">
+                <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+            </button>
+        </form>
+    </div>
+</script>
+
+<script id="categoryColumnTemplate" type="text/x-template">
+    <% var parts = CategoryTitleWithIcon.split(' '); %>
+    <% var iconClass = parts.filter(function(p){ return p.startsWith('fa-'); }).join(' '); %>
+    <% var name = parts.slice(iconClass.split(' ').length).join(' '); %>
+    <span style="font-size:1.2em;"><i class="<%- iconClass %>"></i></span> <span class="ms-1"><%- name %></span>
+</script>

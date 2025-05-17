@@ -1,0 +1,234 @@
+@using Microsoft.AspNetCore.Identity
+@using Expense_Tracker.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Expense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        :root {
+            --bg-main: #121212;
+            --accent-primary: #4e9eff;
+            --accent-secondary: #9e4eff;
+            --text-main: #e0e0e0;
+            --text-muted: #9ca3af;
+            --cta-hover: #2563eb;
+        }
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+        }
+        .split-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+        .form-panel {
+            background: #fff;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 2rem;
+        }
+        .form-box {
+            width: 100%;
+            max-width: 370px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.7rem;
+        }
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--bg-main);
+        }
+        .form-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bg-main);
+            margin-bottom: 0.5rem;
+        }
+        .form-subtext {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        .form-label {
+            font-weight: 500;
+            color: var(--bg-main);
+        }
+        .form-control {
+            border-radius: 0.6rem;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(78, 158, 255, 0.15);
+        }
+        .forgot-link {
+            float: right;
+            font-size: 0.95rem;
+            color: var(--accent-primary);
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 1.2rem;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        .btn-signup {
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.6rem;
+            padding: 0.9rem 0;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 2px 8px 0 rgba(78, 158, 255, 0.10);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn-signup:hover {
+            background: var(--cta-hover);
+            box-shadow: 0 4px 16px 0 rgba(37, 99, 235, 0.18);
+        }
+        .login-link {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .login-link a {
+            color: var(--bg-main);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .visual-panel {
+            flex: 1 1 0;
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--accent-secondary) 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top-left-radius: 2rem;
+            border-bottom-left-radius: 2rem;
+            padding: 2rem;
+        }
+        .promo-text {
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-align: left;
+            max-width: 400px;
+            margin-bottom: 2.5rem;
+        }
+        @@media (max-width: 991px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .visual-panel {
+                border-radius: 0 0 2rem 2rem;
+                min-height: 260px;
+                padding: 2rem 1rem;
+            }
+        }
+        @@media (max-width: 600px) {
+            .form-box {
+                max-width: 100%;
+            }
+            .promo-text {
+                font-size: 1.3rem;
+                text-align: center;
+                margin-bottom: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Side (Form Panel) -->
+        <div class="form-panel">
+            <div class="form-box">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill='#4e9eff'/></svg>
+                    </div>
+                    <span class="logo-text">Expense</span>
+                </div>
+                <div class="form-heading">Get Started</div>
+                <div class="form-subtext">Welcome to Expense – Let's create your account</div>
+                <form asp-action="SignUp" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="surname">Surname</label>
+                            <input type="text" class="form-control" id="surname" name="surname" required />
+                        </div>
+                    </div>
+                    <label class="form-label mt-2" for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label mb-0" for="password">Password</label>
+                        <a href="#" class="forgot-link">Forgot?</a>
+                    </div>
+                    <input type="password" class="form-control" id="password" name="password" required />
+                    <button type="submit" class="btn btn-signup mt-2">Sign up</button>
+                </form>
+                <div class="login-link">
+                    Already have an account? <a href="#">Log in</a>
+                </div>
+            </div>
+        </div>
+        <!-- Right Side (Visual Panel) -->
+        <div class="visual-panel">
+            <div class="promo-text">
+                Enter <span style="font-style:italic;">the Future</span><br>
+                of <b>Payments,</b><br>
+                today
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

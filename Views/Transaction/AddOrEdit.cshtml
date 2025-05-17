@@ -1,0 +1,77 @@
+﻿@model Expense_Tracker.Models.Transaction
+
+@{
+    ViewData["PageTitle"] = Model.TransactionId == 0 ? "Create a new transaction" : "Edit transaction";
+    var categories = ViewBag.Categories as List<Expense_Tracker.Models.Category>;
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card shadow p-4" style="background-color:#212b36">
+            <form asp-action="AddOrEdit" autocomplete="off">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" name="TransactionId" value="@Model.TransactionId" />
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="text" class="form-control" id="date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="mb-3">
+                    <label for="CategoryId" class="form-label">Category</label>
+                    <select class="form-select" id="CategoryId" name="CategoryId" required>
+                        @foreach (var cat in categories)
+                        {
+                            if (cat.CategoryId == Model.CategoryId)
+                            {
+                                <option value="@cat.CategoryId" selected>@cat.Title</option>
+                            }
+                            else
+                            {
+                                <option value="@cat.CategoryId">@cat.Title</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger fs-6"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="text" class="form-control" id="amount" name="Amount" value="@Model.Amount" required />
+                    <span asp-validation-for="Amount" class="text-danger fs-6"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Note</label>
+                    <textarea class="form-control" id="note" name="Note" rows="2" placeholder="Note">@Model.Note</textarea>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.0/dist/autoNumeric.min.js"></script>
+    <script>
+        // Flatpickr for date input
+        flatpickr("#date", {
+            dateFormat: "M-d-y",
+            defaultDate: document.getElementById('date').value || new Date(),
+            allowInput: true
+        });
+
+        // AutoNumeric for currency formatting
+        new AutoNumeric('#amount', {
+            currencySymbol: '$',
+            decimalPlaces: 0,
+            digitGroupSeparator: ',',
+            unformatOnSubmit: true
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

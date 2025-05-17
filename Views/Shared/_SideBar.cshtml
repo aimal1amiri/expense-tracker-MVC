@@ -1,0 +1,108 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Identity
+@using Expense_Tracker.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var fullName = user != null ? $"{user.Name} {user.Surname}" : "User";
+
+    List<Object> menuItems = new List<Object>();
+
+    menuItems.Add(new
+    {
+        text = "General",
+        separator = true,
+    });
+    menuItems.Add(new
+    {
+        text = "Dashboard",
+        url = "/",
+        iconCss = "fa-solid fa-box",
+    });
+    menuItems.Add(new
+    {
+        text = "Categories",
+        url = "/Category",
+        iconCss = "fa-solid fa-folder-closed",
+    });
+    menuItems.Add(new
+    {
+        text = "Transactions",
+        iconCss = "fa-solid fa-arrow-right-arrow-left",
+        url = "/Transaction"
+    });
+
+    menuItems.Add(new
+    {
+        text = "Extras",
+        separator = true,
+    });
+    menuItems.Add(new
+    {
+        text = "Reports",
+        iconCss = "fa-solid fa-chart-simple",
+        url = "#"
+    }); menuItems.Add(new
+    {
+        text = "Settings",
+        iconCss = "fa-solid fa-gear",
+        url = "#"
+    });
+}
+
+<div id="sidebar" class="d-flex flex-column p-3 text-bg-dark" style="position:relative;">
+    <button class="sidebar-close-btn d-md-none" onclick="toggleSidebar()" style="display:none;position:absolute;top:1em;right:1em;z-index:3001;background:#232b36;border:none;color:#fff;font-size:2em;border-radius:0.5em;padding:0.2em 0.5em;">
+        <i class="fa fa-times"></i>
+    </button>
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <img src="~/logo.png" alt="Logo" width="40" height="40" class="me-2">
+        <span class="fs-4">Expense</span>
+    </a>
+    <hr>
+    <div class="profile-wrapper d-flex align-items-center mb-3">
+        <img class="profile-pic rounded-circle me-2" src="~/profile.jpg" width="40" height="40" />
+        <div class="d-flex flex-column">
+            <strong>@fullName</strong>
+            <span class="text-muted" style="font-size: 0.9em;">Wallet App</span>
+        </div>
+    </div>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="/" class="nav-link text-white">
+                <i class="fa-solid fa-box me-2"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="/Category" class="nav-link text-white">
+                <i class="fa-solid fa-folder-closed me-2"></i> Categories
+            </a>
+        </li>
+        <li>
+            <a href="/Transaction" class="nav-link text-white">
+                <i class="fa-solid fa-arrow-right-arrow-left me-2"></i> Transactions
+            </a>
+        </li>
+        <li><hr class="dropdown-divider bg-secondary"></li>
+        <li>
+            <a asp-controller="Reports" asp-action="Index" class="nav-link text-white">
+                <i class="fa-solid fa-chart-simple me-2"></i> Reports
+            </a>
+        </li>
+        <li>
+            <a asp-controller="Settings" asp-action="Index" class="nav-link text-white">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+            </a>
+        </li>
+    </ul>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2 d-flex justify-content-center">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-danger w-100">Logout</button>
+        </form>
+    }
+</div>

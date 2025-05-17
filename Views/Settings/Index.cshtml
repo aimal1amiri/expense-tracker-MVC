@@ -1,0 +1,70 @@
+@model Expense_Tracker.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Settings";
+}
+<div class="container mt-5">
+    <h2>Settings</h2>
+    <hr />
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Edit Profile</h4>
+            <form asp-action="EditProfile" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="@Model.Name" required />
+                </div>
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Surname</label>
+                    <input type="text" class="form-control" id="surname" name="surname" value="@Model.Surname" required />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="@Model.Email" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+            <hr />
+            <h4>Change Password</h4>
+            <form asp-action="ChangePassword" method="post">
+                <div class="mb-3">
+                    <label for="currentPassword" class="form-label">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required />
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required />
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+                </div>
+                <button type="submit" class="btn btn-secondary">Change Password</button>
+            </form>
+            <hr />
+            <h4>Export Data</h4>
+            <form asp-action="ExportData" method="post">
+                <button type="submit" class="btn btn-success">Export My Data</button>
+            </form>
+            <hr />
+            <h4 class="text-danger">Danger Zone</h4>
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                <button type="submit" class="btn btn-danger">Delete My Account</button>
+            </form>
+        </div>
+    </div>
+</div> 

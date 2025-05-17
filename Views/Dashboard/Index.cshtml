@@ -1,0 +1,241 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["isDashboard"] = true;
+    ViewData["Title"] = "Dashboard";
+    // Prepare colors and icons for categories
+    var categoryColors = new[] { "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#FF6384", "#00C49F", "#FFBB28", "#FF8042", "#A28EFF" };
+    var doughnutData = ViewBag.DoughnutChartData as IEnumerable<dynamic>;
+    var doughnutList = (doughnutData as IEnumerable<dynamic>)?.Cast<dynamic>().ToList() ?? new List<dynamic>();
+    var legendItems = doughnutList.Select((item, idx) => {
+        var parts = (item.categoryTitleWithIcon as string)?.Split(' ') ?? new string[0];
+        var iconClass = string.Join(' ', parts.TakeWhile(p => p.StartsWith("fa-")));
+        var name = string.Join(' ', parts.SkipWhile(p => p.StartsWith("fa-")));
+        return new {
+            color = categoryColors[idx % categoryColors.Length],
+            iconClass = iconClass,
+            name = name
+        };
+    }).ToList();
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center bg-dark text-white h-100">
+                <div class="card-body">
+                    <div class="mb-2"><i class="fa-solid fa-dollar-sign fa-2xl text-success"></i></div>
+                    <div class="fw-bold">Total Income</div>
+                    <div class="display-6 fw-bold">@ViewBag.TotalIncome</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center bg-dark text-white h-100">
+                <div class="card-body">
+                    <div class="mb-2"><i class="fa-solid fa-dollar-sign fa-2xl text-danger"></i></div>
+                    <div class="fw-bold">Total Expense</div>
+                    <div class="display-6 fw-bold">@ViewBag.TotalExpense</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center bg-dark text-white h-100">
+                <div class="card-body">
+                    <div class="mb-2"><i class="fa-solid fa-dollar-sign fa-2xl text-primary"></i></div>
+                    <div class="fw-bold">Balance</div>
+                    <div class="display-6 fw-bold">@ViewBag.Balance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-5 mb-3">
+            <div class="card shadow bg-dark text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Expense By Category</h5>
+                    <div class="d-flex flex-row align-items-start mb-2 flex-wrap">
+                        @if (legendItems != null)
+                        {
+                            <ul class="list-unstyled d-flex flex-wrap mb-2" style="gap: 1.5rem;">
+                                @foreach (var item in legendItems)
+                                {
+                                    <li class="d-flex align-items-center" style="min-width: 120px;">
+                                        <span class="me-2" style="font-size:1.2em; color:@item.color"><i class="@item.iconClass"></i></span>
+                                        <span class="me-1">@item.name</span>
+                                        <span class="rounded-circle d-inline-block" style="width:12px;height:12px;background:@item.color;"></span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 mb-3">
+            <div class="card shadow bg-dark text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Income vs Expense</h5>
+                    <canvas id="splineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-7 mb-3">
+            <div class="card shadow bg-dark text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Transactions</h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ((IEnumerable<dynamic>)ViewBag.RecentTransactions).Take(5))
+                                {
+                                    var parts = (item.CategoryTitleWithIcon as string)?.Split(' ') ?? new string[0];
+                                    var iconClass = string.Join(' ', parts.TakeWhile(p => p.StartsWith("fa-")));
+                                    var name = string.Join(' ', parts.SkipWhile(p => p.StartsWith("fa-")));
+                                    <tr>
+                                        <td><span style="font-size:1.2em;"><i class="@iconClass"></i></span> <span class="ms-1">@name</span></td>
+                                        <td>@item.Date.ToString("MMM-dd-yy")</td>
+                                        <td>
+                                            @if ((item.Category != null && item.Category.Type == "Income") || (item.FormattedAmount != null && item.FormattedAmount.StartsWith("+")))
+                                            {
+                                                <span class="text-success">@item.FormattedAmount</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">@item.FormattedAmount</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 mb-3">
+            <div class="card shadow bg-dark text-white h-100 d-flex align-items-center justify-content-center" style="min-height: 220px;">
+                <span class="fs-2 text-secondary"><i class="fa-solid fa-plus"></i> Widget</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Prepare colors for categories
+        const categoryColors = ["#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#FF6384", "#00C49F", "#FFBB28", "#FF8042", "#A28EFF"];
+        // Doughnut Chart
+        const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        const doughnutData = @Html.Raw(Json.Serialize(ViewBag.DoughnutChartData));
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: doughnutData.map(x => x.categoryTitleWithIcon),
+                datasets: [{
+                    data: doughnutData.map(x => x.amount),
+                    backgroundColor: categoryColors.slice(0, doughnutData.length),
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.parsed;
+                                return context.label + ': $' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Spline Chart
+        const splineCtx = document.getElementById('splineChart').getContext('2d');
+        const splineData = @Html.Raw(Json.Serialize(ViewBag.SplineChartData));
+        new Chart(splineCtx, {
+            type: 'line',
+            data: {
+                labels: splineData.map(x => x.day),
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: splineData.map(x => x.income),
+                        borderColor: '#00C49F',
+                        backgroundColor: '#00C49F',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Expense',
+                        data: splineData.map(x => x.expense),
+                        borderColor: '#FFBB28',
+                        backgroundColor: '#FFBB28',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            color: '#fff',
+                            font: { size: 16 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.parsed.y;
+                                return label + ': $' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#fff',
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    </script>
+}

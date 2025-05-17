@@ -1,0 +1,77 @@
+﻿@model Expense_Tracker.Models.Category
+
+@{
+    ViewData["PageTitle"] = Model.CategoryId == 0 ? "Create a new category" : "Edit category";
+    // Only use Font Awesome Free icons
+    var iconChoices = new[] {
+        "fa-solid fa-car", "fa-solid fa-utensils", "fa-solid fa-plane", "fa-solid fa-heart", "fa-solid fa-home",
+        "fa-solid fa-briefcase", "fa-solid fa-gift", "fa-solid fa-bolt", "fa-solid fa-bus", "fa-solid fa-mug-hot",
+        "fa-solid fa-shopping-cart", "fa-solid fa-money-bill", "fa-solid fa-film", "fa-solid fa-book", "fa-solid fa-tree",
+        "fa-solid fa-couch", "fa-solid fa-leaf", "fa-solid fa-bicycle", "fa-solid fa-dog", "fa-solid fa-cat"
+    };
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card shadow p-4" style="background-color:#212b36">
+            <form asp-action="AddOrEdit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" name="CategoryId" value="@Model.CategoryId" />
+                <div class="mb-3">
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" id="radio-expense" name="Type" value="Expense" autocomplete="off" checked="@(Model.Type=="Expense")">
+                        <label class="btn btn-outline-danger" for="radio-expense">Expense</label>
+                        <input type="radio" class="btn-check" id="radio-income" name="Type" value="Income" autocomplete="off" checked="@(Model.Type=="Income")">
+                        <label class="btn btn-outline-success" for="radio-income">Income</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="Title" value="@Model.Title" placeholder="Title" required />
+                    <span asp-validation-for="Title" class="text-danger fs-6"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="icon" class="form-label">Icon <span class="text-muted" style="font-size:0.9em;">(Search and pick an icon below)</span></label>
+                    <input type="text" class="form-control mb-2" id="icon-search" placeholder="Search icons...">
+                    <input type="hidden" id="icon" name="Icon" value="@Model.Icon" />
+                    <div class="icon-picker mt-2 p-2 rounded d-flex flex-wrap gap-2" style="max-height:120px;overflow:auto;background:#232b36;">
+                        @foreach (var icon in iconChoices)
+                        {
+                            <span class="icon-choice border rounded d-flex align-items-center justify-content-center"
+                                  data-icon="@icon"
+                                  style="width:40px;height:40px;font-size:1.5em;cursor:pointer;color:#fff;background:transparent;">
+                                <i class="@icon"></i>
+                            </span>
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-shapes fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const iconChoices = Array.from(document.querySelectorAll('.icon-choice'));
+        document.getElementById('icon-search').addEventListener('input', function() {
+            const val = this.value.toLowerCase();
+            iconChoices.forEach(el => {
+                el.style.display = el.getAttribute('data-icon').toLowerCase().includes(val) ? '' : 'none';
+            });
+        });
+        iconChoices.forEach(function(el) {
+            el.onclick = function() {
+                document.getElementById('icon').value = this.getAttribute('data-icon');
+                iconChoices.forEach(ic => ic.classList.remove('border-primary'));
+                this.classList.add('border-primary');
+            };
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Expense_Tracker.Models.Category>
+
+@{
+    ViewData["PageTitle"] = "Categories";
+    ViewData["PageActionText"] = "+ New Category";
+    ViewData["PageActionUrl"] = "/Category/AddOrEdit";
+    var page = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
+    var pageSize = 5;
+    var totalItems = Model.Count();
+    var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+    var pagedCategories = Model.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow bg-dark text-white">
+            <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
+                <span class="fw-bold">Category</span>
+                <a class="btn btn-success btn-sm" href="@ViewData["PageActionUrl"]">+ New Category</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in pagedCategories)
+                            {
+                                <tr>
+                                    <td style="width:6%;text-align:center;"><i class="@item.Icon" style="font-size:1.5em;"></i></td>
+                                    <td>@item.Title</td>
+                                    <td>
+                                        @if (item.Type == "Income")
+                                        {
+                                            <span class="badge bg-success">Income</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Expense</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-primary me-1" href="/Category/AddOrEdit/@item.CategoryId" title="Edit" style="font-size:1em;"><i class="fa fa-pen"></i></a>
+                                        <form action="/Category/Delete/@item.CategoryId" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this record?')" title="Delete" style="font-size:1em;"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-dark d-flex justify-content-between align-items-center">
+                <div>
+                    Showing @((page - 1) * pageSize + 1) - @(Math.Min(page * pageSize, totalItems)) of @totalItems items
+                </div>
+                <nav>
+                    <ul class="pagination mb-0">
+                        <li class="page-item @(page == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>
+                        <li class="page-item @(page == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(page - 1)">&lsaquo;</a>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == page ? "active" : "")">
+                                <a class="page-link" href="?page=@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(page == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(page + 1)">&rsaquo;</a>
+                        </li>
+                        <li class="page-item @(page == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@totalPages">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-shapes fa-2xl"></i>
+        </div>
+    </div>
+</div>
