@@ -28,10 +28,10 @@ jobs:
       run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore "ExpenseTracker.sln"
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build "ExpenseTracker.sln" --configuration Release
 
     - name: Run EF Core Migrations
       run: dotnet ef database update
