@@ -1,8 +1,8 @@
 {
   "Files": [
     {
-      "Id": "/home/aimal/Desktop/Expense Tracker/obj/Debug/net8.0/scopedcss/projectbundle/Expense Tracker.bundle.scp.css",
-      "PackagePath": "staticwebassets/Expense Tracker.bundle.scp.css"
+      "Id": "/home/aimal/Desktop/Expense Tracker/obj/Debug/net8.0/scopedcss/projectbundle/ExpenseTracker.bundle.scp.css",
+      "PackagePath": "staticwebassets/ExpenseTracker.bundle.scp.css"
     },
     {
       "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/css/site.css",
@@ -269,20 +269,20 @@
       "PackagePath": "staticwebassets/profile.jpg"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Expense Tracker.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.ExpenseTracker.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.Expense Tracker.props",
-      "PackagePath": "build\\Expense Tracker.props"
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.ExpenseTracker.props",
+      "PackagePath": "build\\ExpenseTracker.props"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Expense Tracker.props",
-      "PackagePath": "buildMultiTargeting\\Expense Tracker.props"
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.ExpenseTracker.props",
+      "PackagePath": "buildMultiTargeting\\ExpenseTracker.props"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Expense Tracker.props",
-      "PackagePath": "buildTransitive\\Expense Tracker.props"
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.ExpenseTracker.props",
+      "PackagePath": "buildTransitive\\ExpenseTracker.props"
     }
   ],
   "ElementsToRemove": []
