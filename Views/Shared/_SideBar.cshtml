@@ -53,7 +53,7 @@
     });
 }
 
-<div id="sidebar" class="d-flex flex-column p-3 text-bg-dark" style="position:relative;">
+<div id="sidebar" class="d-flex flex-column p-3 text-bg-dark" style="position:relative; min-height: 100vh;">
     <button class="sidebar-close-btn d-md-none" onclick="toggleSidebar()" style="display:none;position:absolute;top:1em;right:1em;z-index:3001;background:#232b36;border:none;color:#fff;font-size:2em;border-radius:0.5em;padding:0.2em 0.5em;">
         <i class="fa fa-times"></i>
     </button>
@@ -100,9 +100,29 @@
     </ul>
     @if (SignInManager.IsSignedIn(User))
     {
-        <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2 d-flex justify-content-center">
+        <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2" id="logoutForm">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-outline-danger w-100">Logout</button>
+            <button type="submit" class="btn btn-outline-danger w-100" id="logoutBtn">Logout</button>
         </form>
     }
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the form using its ID
+        var logoutForm = document.getElementById('logoutForm');
+        //console.log('Logout form found:', logoutForm); // Debug log
+
+        if (logoutForm) {
+            logoutForm.addEventListener('submit', function (e) {
+                // Get the button using its ID
+                var btn = document.getElementById('logoutBtn');
+                //console.log('Logout button found:', btn); // Debug log
+
+                if (btn) {
+                    setButtonLoading(btn, 'Logging out...');
+                }
+            });
+        }
+    });
+</script>

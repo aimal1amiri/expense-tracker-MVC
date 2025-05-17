@@ -167,6 +167,13 @@
                 </a>
             </li>
         </ul>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2" id="mobileLogoutForm">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger w-100" id="mobileLogoutBtn">Logout</button>
+            </form>
+        }
     </div>
     <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -236,6 +243,19 @@
             drawer.classList.remove('active');
             overlay.style.display = 'none';
             document.body.style.overflow = '';
+        }
+    });
+
+    // Add loading state to mobile logout button
+    document.addEventListener('DOMContentLoaded', function () {
+        var mobileLogoutForm = document.getElementById('mobileLogoutForm');
+        if (mobileLogoutForm) {
+            mobileLogoutForm.addEventListener('submit', function (e) {
+                var btn = document.getElementById('mobileLogoutBtn');
+                if (btn) {
+                    setButtonLoading(btn, 'Logging out...');
+                }
+            });
         }
     });
     </script>

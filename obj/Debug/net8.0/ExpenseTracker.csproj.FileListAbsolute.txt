@@ -316,3 +316,4 @@
 /home/aimal/Desktop/Expense Tracker/obj/Debug/net8.0/ExpenseTracker.pdb
 /home/aimal/Desktop/Expense Tracker/obj/Debug/net8.0/ExpenseTracker.genruntimeconfig.cache
 /home/aimal/Desktop/Expense Tracker/obj/Debug/net8.0/ref/ExpenseTracker.dll
+/home/aimal/Desktop/Expense Tracker/bin/Debug/net8.0/ExpenseTracker.db

@@ -100,6 +100,7 @@
         .forgot-link:hover {
             text-decoration: underline;
         }
+        
         .btn-signup {
             width: 100%;
             background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
@@ -113,8 +114,11 @@
             transition: background 0.2s, box-shadow 0.2s;
         }
         .btn-signup:hover {
-            background: var(--cta-hover);
+            
             box-shadow: 0 4px 16px 0 rgba(37, 99, 235, 0.18);
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary)); /* Your text gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .login-link {
             text-align: center;
@@ -131,7 +135,7 @@
         }
         .visual-panel {
             flex: 1 1 0;
-            background: linear-gradient(135deg, var(--bg-main) 0%, var(--accent-secondary) 100%);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -196,6 +200,7 @@
                 <div class="form-heading">Get Started</div>
                 <div class="form-subtext">Welcome to Expense – Let's create your account</div>
                 <form asp-action="SignUp" method="post">
+                    @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="row">
                         <div class="col-6">
@@ -211,7 +216,7 @@
                     <input type="email" class="form-control" id="email" name="email" required />
                     <div class="d-flex justify-content-between align-items-center">
                         <label class="form-label mb-0" for="password">Password</label>
-                        <a href="#" class="forgot-link">Forgot?</a>
+                        
                     </div>
                     <input type="password" class="form-control" id="password" name="password" required />
                     <button type="submit" class="btn btn-signup mt-2">Sign up</button>
@@ -230,5 +235,26 @@
             </div>
         </div>
     </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the form using a more specific selector
+            var form = document.querySelector('form[method="post"]');
+            console.log('Form found:', form); // Debug log
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    // Get the button using a more specific selector
+                    var btn = this.querySelector('button[type="submit"]');
+                    console.log('Button found:', btn); // Debug log
+
+                    if (btn) {
+                        setButtonLoading(btn, 'Signing up...');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

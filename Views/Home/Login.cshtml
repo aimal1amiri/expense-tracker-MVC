@@ -34,7 +34,7 @@
         }
         .visual-panel {
             flex: 1 1 0;
-            background: linear-gradient(135deg, #4e9eff 0%, #9e4eff 100%);
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -152,7 +152,7 @@
         }
         .btn-signin {
             width: 100%;
-            background: #121212;
+            background: blue
             color: #fff;
             font-weight: 700;
             border: none;
@@ -163,8 +163,11 @@
             transition: background 0.2s, box-shadow 0.2s;
         }
         .btn-signin:hover {
-            background: #222;
+            
             box-shadow: 0 4px 16px 0 rgba(18, 18, 18, 0.18);
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary)); /* Your text gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .divider {
             text-align: center;
@@ -182,25 +185,7 @@
             vertical-align: middle;
             margin: 0 0.5rem;
         }
-        .btn-google {
-            width: 100%;
-            background: #fff;
-            color: #222;
-            font-weight: 600;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.6rem;
-            padding: 0.8rem 0;
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.7rem;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .btn-google:hover {
-            background: #f3f4f6;
-            box-shadow: 0 2px 8px 0 rgba(34, 197, 94, 0.10);
-        }
+        
         .login-link {
             text-align: center;
             color: var(--text-muted);
@@ -332,15 +317,15 @@
                     <button type="submit" class="btn btn-signin mt-2">Sign In</button>
                 </form>
                 <div class="divider">or</div>
-                <button class="btn btn-google">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style="width:1.3rem; height:1.3rem;"> Sign In with Google
-                </button>
+                
                 <div class="login-link">
                     Don't have an account? <a href="/signup">Sign Up</a>
                 </div>
             </div>
         </div>
     </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
     <script>
         function togglePassword() {
             var pwd = document.getElementById('password');
@@ -353,6 +338,23 @@
                 icon.innerHTML = '<path stroke="#9ca3af" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#9ca3af" stroke-width="2"/>';
             }
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the form using a more specific selector
+            var form = document.querySelector('form[method="post"]');
+            console.log('Login form found:', form); // Debug log
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    // Get the button using a more specific selector
+                    var btn = this.querySelector('button[type="submit"]');
+                    console.log('Login button found:', btn); // Debug log
+
+                    if (btn) {
+                        setButtonLoading(btn, 'Signing in...');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html> 
