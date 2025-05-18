@@ -218,19 +218,21 @@
                 flex-direction: column;
                 min-height: unset;
                 background: transparent;
+                /* Ensure no gap */
             }
             .form-panel {
                 order: 1;
             }
             .visual-panel {
                 order: 2;
-            }
-            .visual-panel {
                 border-radius: 1.2rem 1.2rem 0 0;
                 min-width: unset;
                 padding: 2rem 1rem 1.2rem 1rem;
                 align-items: center;
                 text-align: center;
+                padding-bottom: 2rem;
+                flex: unset;
+                height: fit-content;
             }
             .form-panel {
                 border-radius: 0 0 1.2rem 1.2rem;
@@ -260,6 +262,11 @@
             .divider {
                 margin: 1.2rem 0 1.2rem 0;
                 font-size: 0.95rem;
+            }
+            .dashboard-preview {
+                padding: 0.3rem;
+                border-radius: 1rem;
+                padding-left: 20px;
             }
         }
     </style>

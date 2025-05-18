@@ -65,10 +65,7 @@
             <div class="align-items-center">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <form asp-controller="Home" asp-action="Logout" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-outline-danger">Logout</button>
-                    </form>
+                    
                 }
                 else
                 {
@@ -122,7 +119,7 @@
         </div>
     </div>
     <!-- Mobile Drawer (hidden on desktop) -->
-    <div id="mobileDrawer" class="mobile-drawer">
+    <div id="mobileDrawer" class="mobile-drawer d-md-none">
         <button class="sidebar-close-btn" onclick="toggleMobileDrawer()" style="position:absolute;top:1em;right:1em;z-index:4100;background:#232b36;border:none;color:#fff;font-size:2em;border-radius:0.5em;padding:0.2em 0.5em;">
             <i class="fa fa-times"></i>
         </button>
@@ -167,13 +164,10 @@
                 </a>
             </li>
         </ul>
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2" id="mobileLogoutForm">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-outline-danger w-100" id="mobileLogoutBtn">Logout</button>
-            </form>
-        }
+        <form asp-controller="Home" asp-action="Logout" method="post" class="mt-auto mb-2" id="mobileLogoutForm">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-danger w-100" id="mobileLogoutBtn">Logout</button>
+        </form>
     </div>
     <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

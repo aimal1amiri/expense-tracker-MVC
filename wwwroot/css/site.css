@@ -472,3 +472,12 @@ img.profile-pic {
     background: #31373d;
     color: #ff4e48;
 }
+
+/* Add mobile padding to landing page sections */
+@media (max-width: 700px) {
+    .hero-section,
+    .dashboard-preview {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}

@@ -40,6 +40,7 @@
             justify-content: center;
             align-items: center;
             padding: 2rem 2rem;
+            
         }
         .form-box {
             width: 100%;
@@ -158,7 +159,7 @@
                 flex-direction: column;
             }
             .visual-panel {
-                border-radius: 0 0 2rem 2rem;
+                border-radius: 2rem 2rem 0 0 ;
                 min-height: 260px;
                 padding: 2rem 1rem;
             }
@@ -166,6 +167,7 @@
         @@media (max-width: 600px) {
             .form-box {
                 max-width: 100%;
+                border-radius: 0 0 2rem 2rem  ;
             }
             .promo-text {
                 font-size: 1.3rem;
@@ -222,7 +224,7 @@
                     <button type="submit" class="btn btn-signup mt-2">Sign up</button>
                 </form>
                 <div class="login-link">
-                    Already have an account? <a href="#">Log in</a>
+                    Already have an account? <a asp-controller="Home" asp-action="Login">Log in</a>
                 </div>
             </div>
         </div>

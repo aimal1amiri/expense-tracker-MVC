@@ -111,6 +111,14 @@ namespace Expense_Tracker.Controllers
             return View();
         }
 
+        // Contact page action
+        [HttpGet]
+        [Route("contact")]
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
