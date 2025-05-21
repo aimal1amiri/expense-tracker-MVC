@@ -9,16 +9,12 @@
       "PackagePath": "staticwebassets/css/site.css"
     },
     {
-      "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/favicon-16x16.png",
-      "PackagePath": "staticwebassets/favicon-16x16.png"
-    },
-    {
-      "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/favicon-32x32.png",
-      "PackagePath": "staticwebassets/favicon-32x32.png"
-    },
-    {
       "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/faviconn.ico",
+      "PackagePath": "staticwebassets/faviconn.ico"
     },
     {
       "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/homePage.png",
@@ -259,10 +255,6 @@
     {
       "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/logo.png",
       "PackagePath": "staticwebassets/logo.png"
-    },
-    {
-      "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/logoo.png",
-      "PackagePath": "staticwebassets/logoo.png"
     },
     {
       "Id": "/home/aimal/Desktop/Expense Tracker/wwwroot/profile.jpg",
